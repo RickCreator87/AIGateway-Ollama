@@ -18,7 +18,7 @@ echo "📦 Step 2: Checking for Ollama binary"
 if ! command -v ollama >/dev/null 2>&1; then
   echo "❌ Ollama not found in PATH"
   echo "This is expected on GitHub Actions unless you install it."
-  exit 0   # Exit gracefully so workflow passes
+  exit 1   # Signal test failure; CI can be configured to allow this
 else
   echo "✅ Ollama binary found"
 fi
