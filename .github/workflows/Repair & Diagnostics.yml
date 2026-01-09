@@ -1,0 +1,51 @@
+name: Workflow Repair & Diagnostics
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/**"
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Enable debug logging
+        run: |
+          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+          echo "ACTIONS_RUNNER_DEBUG=true" >> $GITHUB_ENV
+
+      - name: Validate YAML syntax
+        run: |
+          echo "🔍 Validating workflow YAML files..."
+          for file in .github/workflows/*.yml; do
+            echo "Checking $file"
+            yamllint "$file"
+          done
+
+      - name: Check for unpinned actions
+        run: |
+          echo "🔍 Checking for unpinned GitHub Actions..."
+          grep -R "uses: .*@" -n .github/workflows | grep "@master\|@main" && exit 1 || echo "All actions pinned."
+
+      - name: Check permissions blocks
+        run: |
+          echo "🔍 Checking permissions..."
+          for file in .github/workflows/*.yml; do
+            echo "File: $file"
+            grep -q "permissions:" "$file" || echo "⚠️ Missing permissions block in $file"
+          done
+
+      - name: Check for missing secrets
+        run: |
+          echo "🔍 Checking for referenced secrets..."
+          grep -R "secrets." -n .github/workflows || echo "No secrets referenced."
+
+      - name: Summary
+        run: |
+          echo "🧩 Workflow Repair Diagnostics Complete"
+          echo "Review logs above for warnings or failures."
