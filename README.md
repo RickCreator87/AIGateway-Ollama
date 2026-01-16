@@ -1,6 +1,7 @@
 
 
 
+
 [![Maintainability](https://qlty.sh/gh/RickCreator87/projects/rickcreator87.github.io/maintainability.svg)](https://qlty.sh/gh/RickCreator87/projects/rickcreator87.github.io)
 
 # AI Gateway for Ollama
@@ -20,6 +21,3 @@ This project lets you run local LLMs via Ollama while keeping compatibility with
 
 If a client works with `api.openai.com`, it should work here with minimal or zero changes.
 
----
-
-## Architecture (High Level)
